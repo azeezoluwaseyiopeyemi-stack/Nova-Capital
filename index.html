@@ -1,182 +1,118 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nova Capital - Login & Register</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #3b82f6;
-            --accent-hover: #2563eb;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --success: #22c55e;
-            --border: #334155;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .auth-container { width: 100%; max-width: 400px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        .brand { text-align: center; margin-bottom: 25px; }
-        .brand h2 { color: var(--accent-color); font-size: 26px; }
-        .brand p { color: var(--text-muted); font-size: 14px; margin-top: 5px; }
-        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; color: var(--text-muted); font-weight: 600; border-bottom: 2px solid transparent; }
-        .tab.active { color: var(--accent-color); border-bottom-color: var(--accent-color); }
-        form { display: none; flex-direction: column; gap: 15px; }
-        form.active { display: flex; }
-        input { background: var(--bg-color); border: 1px solid var(--border); padding: 12px; border-radius: 6px; color: white; font-size: 15px; }
-        input:focus { outline: none; border-color: var(--accent-color); }
-        .btn { background: var(--accent-color); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 16px; transition: background 0.2s; }
-        .btn:hover { background: var(--accent-hover); }
-        .alert { padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; display: none; text-align: center; }
-        .alert-success { background: rgba(34, 197, 94, 0.2); color: var(--success); border: 1px solid var(--success); }
-        .alert-error { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>NOVA CAPITAL | Global Investment Platform</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-color: #3b82f6;
+      --accent-hover: #2563eb;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #22c55e;
+      --gold: #f59e0b;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; border-bottom: 1px solid var(--border); background: var(--bg-color); position: sticky; top: 0; z-index: 100; }
+    .brand { font-size: 20px; font-weight: bold; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .brand span { background: var(--accent-color); color: white; padding: 2px 8px; border-radius: 4px; }
+    .brand b { color: var(--gold); }
+    nav { display: flex; gap: 20px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 15px; transition: color 0.2s; }
+    nav a:hover { color: var(--text-main); }
+    .actions { display: flex; gap: 12px; align-items: center; }
+    .btn { padding: 10px 18px; border-radius: 6px; font-weight: 600; text-decoration: none; font-size: 14px; cursor: pointer; transition: background 0.2s; }
+    .btn.ghost { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
+    .btn.ghost:hover { border-color: var(--text-muted); }
+    .btn.gold { background: var(--gold); color: #0f172a; }
+    .btn.gold:hover { background: #d97706; }
+    
+    .hero { display: flex; justify-content: space-between; align-items: center; padding: 80px 40px; max-width: 1200px; margin: 0 auto; gap: 40px; }
+    .hero-copy { max-width: 600px; }
+    .eyebrow { color: var(--gold); font-size: 13px; font-weight: bold; letter-spacing: 1px; margin-bottom: 15px; text-transform: uppercase; }
+    h1 { font-size: 48px; line-height: 1.1; margin-bottom: 20px; }
+    h1 em { color: var(--accent-color); font-style: normal; }
+    .lead { color: var(--text-muted); font-size: 18px; margin-bottom: 30px; }
+    .trust-row { display: flex; gap: 20px; margin-top: 40px; color: var(--text-muted); font-size: 13px; }
+    
+    .section { padding: 60px 40px; max-width: 1200px; margin: 0 auto; border-top: 1px solid var(--border); }
+    .section-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
+    .market-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+    .market-card { background: var(--card-bg); border: 1px solid var(--border); padding: 20px; border-radius: 10px; text-decoration: none; color: white; display: flex; flex-direction: column; gap: 10px; }
+    .market-card strong { font-size: 18px; color: var(--success); }
+    
+    footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px; }
+  </style>
 </head>
 <body>
 
-    <div class="auth-container">
-        <div class="brand">
-            <h2>NOVA CAPITAL</h2>
-            <p>Secure Investment & Wealth Management</p>
-        </div>
+<header class="topbar">
+  <a class="brand" href="index.html"><span>Ｎ</span> NOVA <b>CAPITAL</b></a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="#markets">Markets</a>
+    <a href="#plans">Plans</a>
+  </nav>
+  <div class="actions">
+    <a class="btn ghost" href="login.html">Log in</a>
+    <a class="btn gold" href="login.html">Get started</a>
+  </div>
+</header>
 
-        <div id="alertBox" class="alert"></div>
-
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('login')">Login</div>
-            <div class="tab" onclick="switchTab('register')">Register</div>
-        </div>
-
-        <!-- Login Form -->
-        <form id="loginForm" class="active">
-            <input type="email" id="loginEmail" placeholder="Email Address" required>
-            <input type="password" id="loginPassword" placeholder="Password" required>
-            <button type="submit" class="btn">Login to Dashboard</button>
-        </form>
-
-        <!-- Register Form -->
-        <form id="registerForm">
-            <input type="email" id="regEmail" placeholder="Email Address" required>
-            <input type="password" id="regPassword" placeholder="Create Password" required>
-            <button type="submit" class="btn">Create Account & Send Code</button>
-        </form>
-
-        <!-- Verify Code Form (Hidden until registration) -->
-        <form id="verifyForm">
-            <p style="color: var(--text-muted); font-size: 14px; text-align: center;">Enter the verification code sent to your email.</p>
-            <input type="email" id="verifyEmail" placeholder="Confirm Email" required readonly>
-            <input type="text" id="verifyCode" placeholder="Enter 6-digit Code" required style="text-align: center; letter-spacing: 4px; font-size: 18px;">
-            <button type="submit" class="btn" style="background: var(--success);">Verify & Continue</button>
-        </form>
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">BUILD WEALTH. INVEST GLOBALLY.</p>
+      <h1>Your future.<br><em>Our priority.</em></h1>
+      <p class="lead">Explore market information, investment opportunities, and portfolio tools in one secure, professional experience.</p>
+      <div class="actions">
+        <a class="btn gold" href="login.html">Get started ↗</a>
+        <a class="btn ghost" href="#markets">Explore markets</a>
+      </div>
+      <div class="trust-row">
+        <span>◈ Secure architecture</span>
+        <span>◈ Global market data</span>
+        <span>◈ Client support</span>
+      </div>
     </div>
+  </section>
 
-    <script>
-        const API_URL = 'https://nova-capital-backend.onrender.com';
+  <section class="section" id="markets">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">MARKET WATCH</p>
+        <h2>Explore global markets</h2>
+      </div>
+    </div>
+    <div class="market-grid">
+      <div class="market-card">
+        <div><b>Bitcoin</b><small style="color:var(--text-muted)">BTC / USD</small></div>
+        <strong>$67,432.18 <i style="font-size:12px; color:var(--success);">+2.45%</i></strong>
+      </div>
+      <div class="market-card">
+        <div><b>Ethereum</b><small style="color:var(--text-muted)">ETH / USD</small></div>
+        <strong>$3,248.76 <i style="font-size:12px; color:var(--success);">+3.12%</i></strong>
+      </div>
+      <div class="market-card">
+        <div><b>Tesla</b><small style="color:var(--text-muted)">TSLA</small></div>
+        <strong>$248.32 <i style="font-size:12px; color:var(--success);">+1.95%</i></strong>
+      </div>
+      <div class="market-card">
+        <div><b>Gold</b><small style="color:var(--text-muted)">XAU / USD</small></div>
+        <strong>$2,345.60 <i style="font-size:12px; color:var(--success);">+0.72%</i></strong>
+      </div>
+    </div>
+  </section>
+</main>
 
-        function showAlert(message, isSuccess = true) {
-            const box = document.getElementById('alertBox');
-            box.textContent = message;
-            box.className = `alert ${isSuccess ? 'alert-success' : 'alert-error'}`;
-            box.style.display = 'block';
-            setTimeout(() => { box.style.display = 'none'; }, 5000);
-        }
+<footer>
+  <p>© 2026 Nova Capital. All rights reserved.</p>
+</footer>
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById('loginForm').classList.remove('active');
-            document.getElementById('registerForm').classList.remove('active');
-            document.getElementById('verifyForm').classList.remove('active');
-
-            if (tabName === 'login') {
-                document.querySelectorAll('.tab')[0].classList.add('active');
-                document.getElementById('loginForm').classList.add('active');
-            } else if (tabName === 'register') {
-                document.querySelectorAll('.tab')[1].classList.add('active');
-                document.getElementById('registerForm').classList.add('active');
-            }
-        }
-
-        // Handle Registration
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-
-            try {
-                const res = await fetch(`${API_URL}/api/auth/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await res.json();
-                
-                if (res.ok) {
-                    showAlert('Registration successful! Check your email for the verification code.');
-                    document.getElementById('verifyEmail').value = email;
-                    // Switch to verification form view
-                    document.getElementById('registerForm').classList.remove('active');
-                    document.getElementById('verifyForm').classList.add('active');
-                } else {
-                    showAlert(data.message || 'Registration failed', false);
-                }
-            } catch (err) {
-                showAlert('Network error connecting to server', false);
-            }
-        });
-
-        // Handle Code Verification
-        document.getElementById('verifyForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('verifyEmail').value;
-            const code = document.getElementById('verifyCode').value;
-
-            try {
-                const res = await fetch(`${API_URL}/api/auth/verify`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, code })
-                });
-                const data = await res.json();
-                
-                if (res.ok) {
-                    showAlert('Account verified successfully! You can now log in.');
-                    setTimeout(() => { switchTab('login'); }, 2000);
-                } else {
-                    showAlert(data.message || 'Invalid or expired code', false);
-                }
-            } catch (err) {
-                showAlert('Network error connecting to server', false);
-            }
-        });
-
-        // Handle Login
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            try {
-                const res = await fetch(`${API_URL}/api/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await res.json();
-                
-                if (res.ok) {
-                    localStorage.setItem('token', data.token);
-                    showAlert('Login successful! Redirecting...');
-                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
-                } else {
-                    showAlert(data.message || 'Login failed', false);
-                }
-            } catch (err) {
-                showAlert('Network error connecting to server', false);
-            }
-        });
-    </script>
 </body>
 </html>
