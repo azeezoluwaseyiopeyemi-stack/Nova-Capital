@@ -1,1 +1,179 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Log in | NOVA CAPITAL</title><link rel="stylesheet" href="styles.css"></head><body><main class="auth-page"><form class="auth-card" onsubmit="demoLogin(event)"><a class="brand" href="index.html"><span>Ｎ</span> NOVA <b>CAPITAL</b></a><h1>Welcome back</h1><p>Demo login for the local prototype.</p><label>Email<input type="email" required placeholder="you@example.com"></label><label>Password<input type="password" required placeholder="••••••••"></label><button class="btn gold">Log in</button><p class="small">No account? <a href="register.html">Create one</a></p><p id="authMessage" class="notice"></p></form></main><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Capital - Login & Register</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .auth-container { width: 100%; max-width: 400px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .brand { text-align: center; margin-bottom: 25px; }
+        .brand h2 { color: var(--accent-color); font-size: 26px; }
+        .brand a { color: var(--text-muted); font-size: 13px; text-decoration: none; }
+        .brand a:hover { color: var(--text-main); }
+        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; color: var(--text-muted); font-weight: 600; border-bottom: 2px solid transparent; }
+        .tab.active { color: var(--accent-color); border-bottom-color: var(--accent-color); }
+        form { display: none; flex-direction: column; gap: 15px; }
+        form.active { display: flex; }
+        input { background: var(--bg-color); border: 1px solid var(--border); padding: 12px; border-radius: 6px; color: white; font-size: 15px; }
+        input:focus { outline: none; border-color: var(--accent-color); }
+        .btn { background: var(--accent-color); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 16px; transition: background 0.2s; }
+        .btn:hover { background: var(--accent-hover); }
+        .alert { padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; display: none; text-align: center; }
+        .alert-success { background: rgba(34, 197, 94, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .alert-error { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="brand">
+            <h2>NOVA CAPITAL</h2>
+            <a href="index.html">← Back to Home</a>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('login')">Login</div>
+            <div class="tab" onclick="switchTab('register')">Register</div>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="active">
+            <input type="email" id="loginEmail" placeholder="Email Address" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit" class="btn">Login to Dashboard</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm">
+            <input type="email" id="regEmail" placeholder="Email Address" required>
+            <input type="password" id="regPassword" placeholder="Create Password" required>
+            <button type="submit" class="btn">Create Account & Send Code</button>
+        </form>
+
+        <!-- Verify Code Form (Hidden until registration) -->
+        <form id="verifyForm">
+            <p style="color: var(--text-muted); font-size: 14px; text-align: center;">Enter the verification code sent to your email.</p>
+            <input type="email" id="verifyEmail" placeholder="Confirm Email" required readonly>
+            <input type="text" id="verifyCode" placeholder="Enter 6-digit Code" required style="text-align: center; letter-spacing: 4px; font-size: 18px;">
+            <button type="submit" class="btn" style="background: var(--success);">Verify & Continue</button>
+        </form>
+    </div>
+
+    <script>
+        const API_URL = 'https://nova-capital-backend.onrender.com';
+
+        function showAlert(message, isSuccess = true) {
+            const box = document.getElementById('alertBox');
+            box.textContent = message;
+            box.className = `alert ${isSuccess ? 'alert-success' : 'alert-error'}`;
+            box.style.display = 'block';
+            setTimeout(() => { box.style.display = 'none'; }, 5000);
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('registerForm').classList.remove('active');
+            document.getElementById('verifyForm').classList.remove('active');
+
+            if (tabName === 'login') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else if (tabName === 'register') {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+
+            try {
+                const res = await fetch(`${API_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    showAlert('Registration successful! Check your email for the verification code.');
+                    document.getElementById('verifyEmail').value = email;
+                    document.getElementById('registerForm').classList.remove('active');
+                    document.getElementById('verifyForm').classList.add('active');
+                } else {
+                    showAlert(data.message || 'Registration failed', false);
+                }
+            } catch (err) {
+                showAlert('Network error connecting to server', false);
+            }
+        });
+
+        document.getElementById('verifyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('verifyEmail').value;
+            const code = document.getElementById('verifyCode').value;
+
+            try {
+                const res = await fetch(`${API_URL}/api/auth/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, code })
+                });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    showAlert('Account verified successfully! You can now log in.');
+                    setTimeout(() => { switchTab('login'); }, 2000);
+                } else {
+                    showAlert(data.message || 'Invalid or expired code', false);
+                }
+            } catch (err) {
+                showAlert('Network error connecting to server', false);
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const res = await fetch(`${API_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    localStorage.setItem('token', data.token);
+                    showAlert('Login successful! Redirecting...');
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+                } else {
+                    showAlert(data.message || 'Login failed', false);
+                }
+            } catch (err) {
+                showAlert('Network error connecting to server', false);
+            }
+        });
+    </script>
+</body>
+</html>
