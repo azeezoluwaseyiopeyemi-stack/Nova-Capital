@@ -1,8 +1,37 @@
-.container, .hero-section, header {
+/* Make sure the main layout elements stay fluid on mobile */
+body, html {
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Keep wrapper elements from forcing a wide desktop layout on phones */
+.container, header, section, .hero {
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
   box-sizing: border-box;
+}
+
+/* Automatically scale down massive hero text on smaller screens */
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+/* Prevent buttons from blowing up full-width awkwardly */
+.btn, button, .cta-button {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  /* Stack flex containers vertically on mobile */
+  .nav-links, .hero-content, .features-grid {
+    flex-direction: column;
+    width: 100%;
+  }
 }
